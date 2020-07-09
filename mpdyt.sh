@@ -1,11 +1,12 @@
 #!/bin/sh
 
 function parseUrl() {
+	outputFormat="~/Music/${artist:-%(uploader)s}/%(playlist_title)s/%(playlist_index)d - %(title)s.%(ext)s"
 	case "$1" in
 		*youtube.com/watch*) echo try again with playlist url ;;
 		*youtube.com/playlist*)
-			youtube-dl --download-archive ~/Music/downloads.txt --add-metadata -x --audio-format flac -o '~/Music/%(uploader)s/%(playlist_title)s/%(playlist_index)d - %(title)s.%(ext)s' "$1" ;;
-		*.bandcamp.com/) wget -q -O - "$url" | grep -o -P "/album/\K[^\"]+" | while read album ; do youtube-dl --download-archive ~/Music/downloads.txt --add-metadata -x --audio-format flac -o "~/Music/%(uploader)s/%(playlist_title)s/%(playlist_index)d - %(title)s.%(ext)s" "${1}/album/${album}"; done;;
+			youtube-dl --download-archive ~/Music/downloads.txt --add-metadata -x --audio-format flac -o "$outputFormat" "$1" ;;
+		*.bandcamp.com/) wget -q -O - "$url" | grep -o -P "/album/\K[^\"]+" | while read album ; do youtube-dl --download-archive ~/Music/downloads.txt --add-metadata -x --audio-format flac -o "$outputFormat" "${1}/album/${album}"; done;;
 		*) echo "invalid url" ;;
 	esac
 }
